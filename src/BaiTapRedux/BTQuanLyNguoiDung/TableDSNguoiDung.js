@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {connect} from 'react-redux';
+import { connect } from "react-redux";
 
 class TableDSNguoiDung extends Component {
   render() {
@@ -22,9 +22,9 @@ class TableDSNguoiDung extends Component {
             </tr>
           </thead>
           <tbody>
-            {
-              this.props.mangNguoiDung.map((nguoiDung,index)=>{
-                return <tr key={index}>
+            {this.props.mangNguoiDung.map((nguoiDung, index) => {
+              return (
+                <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{nguoiDung.taiKhoan}</td>
                   <td>{nguoiDung.hoTen}</td>
@@ -32,18 +32,34 @@ class TableDSNguoiDung extends Component {
                   <td>{nguoiDung.soDienThoai}</td>
                   <td>{nguoiDung.maLoaiNguoiDung}</td>
                   <td>
-                    <button className="btn btn-outline-danger mr-2" onClick={()=>{
-                      const action = {
-                        type: 'XOA_NGUOI_DUNG',
-                        taiKhoan:nguoiDung.taiKhoan
-                      }
-                      this.props.dispatch(action);
-                    }}>Xóa</button>
-                    <button className="btn btn-outline-primary">Chỉnh sửa</button>
+                    <button
+                      className="btn btn-outline-danger mr-2"
+                      onClick={() => {
+                        const action = {
+                          type: "XOA_NGUOI_DUNG",
+                          taiKhoan: nguoiDung.taiKhoan,
+                        };
+                        this.props.dispatch(action);
+                      }}
+                    >
+                      Xóa
+                    </button>
+                    <button
+                      className="btn btn-outline-primary"
+                      onClick={() => {
+                        const action = {
+                          type: "CHINH_SUA",
+                          nguoiDungChinhSua: nguoiDung
+                        };
+                        this.props.dispatch(action)
+                      }}
+                    >
+                      Chỉnh sửa
+                    </button>
                   </td>
                 </tr>
-              })
-            }
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -52,13 +68,11 @@ class TableDSNguoiDung extends Component {
 }
 const mapStateToProps = (state) => {
   return {
-    mangNguoiDung: state.BTQLReducer.mangNguoiDung
-  }
-}
+    mangNguoiDung: state.BTQLReducer.mangNguoiDung,
+  };
+};
 
-
-export default connect (mapStateToProps) (TableDSNguoiDung)
-
+export default connect(mapStateToProps)(TableDSNguoiDung);
 
 // import React, { Component } from "react";
 // import { connect } from "react-redux";

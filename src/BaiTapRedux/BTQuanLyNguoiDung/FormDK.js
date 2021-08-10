@@ -24,7 +24,7 @@ class FormDK extends Component {
   handleChangeInput = (event) => {
     let { value, name } = event.target; // {valueTaiKhoan} = <input name="taiKhoan" />
 
-    let newValues = { ...this.state.values }; //newValues = {taiKhoan:'',matKhau:'',....}
+    let newValues = { ...this.props.nguoiDung.values }; //newValues = {taiKhoan:'',matKhau:'',....}
     newValues[name] = value; //newValue['taiKhoan'] = valueTaiKhoan
 
     let attrValue = ""; // attrValue = ''
@@ -35,7 +35,7 @@ class FormDK extends Component {
         /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
     }
 
-    let newErrors = { ...this.state.errors };
+    let newErrors = { ...this.props.nguoiDung.errors };
     let messageError = "";
     if (value.trim() === "") {
       messageError = name + " không được bỏ trống !";
@@ -52,9 +52,17 @@ class FormDK extends Component {
     newErrors[name] = messageError;
 
     //Xử lý setState
-    this.setState({
-      values: newValues,
-      errors: newErrors,
+    // this.setState({
+    //   values: newValues,
+    //   errors: newErrors,
+    // });
+
+    this.props.dispatch({
+      type: "HANDLE_CHANGE_INPUT",
+      nguoiDung: {
+        values: newValues,
+        errors: newErrors,
+      },
     });
   };
 
@@ -96,6 +104,8 @@ class FormDK extends Component {
   };
 
   render() {
+    let { taiKhoan, hoTen, matKhau, email, soDienThoai, maLoaiNguoiDung } =
+      this.props.nguoiDung.values;
     return (
       <form className="card mt-5" onSubmit={this.handleSubmit}>
         <div className="card-header bg-dark text-white">Form đăng kí</div>
@@ -105,6 +115,7 @@ class FormDK extends Component {
               <div className="form-group">
                 <p>Tài khoản</p>
                 <input
+                  value={taiKhoan}
                   className="form-control"
                   name="taiKhoan"
                   onChange={this.handleChangeInput}
@@ -114,6 +125,7 @@ class FormDK extends Component {
               <div className="form-group">
                 <p>Mật khẩu</p>
                 <input
+                  value={matKhau}
                   className="form-control"
                   name="matKhau"
                   type="password"
@@ -124,6 +136,7 @@ class FormDK extends Component {
               <div className="form-group">
                 <p>Email</p>
                 <input
+                  value={email}
                   typeEmail="email"
                   className="form-control"
                   name="email"
@@ -136,6 +149,7 @@ class FormDK extends Component {
               <div className="form-group">
                 <p>Họ tên</p>
                 <input
+                  value={hoTen}
                   className="form-control"
                   name="hoTen"
                   onChange={this.handleChangeInput}
@@ -145,6 +159,7 @@ class FormDK extends Component {
               <div className="form-group">
                 <p>Số điện thoại</p>
                 <input
+                  value={soDienThoai}
                   className="form-control"
                   name="soDienThoai"
                   onChange={this.handleChangeInput}
@@ -154,6 +169,7 @@ class FormDK extends Component {
               <div className="form-group">
                 <p>Mã loại người dùng</p>
                 <select
+                  value={maLoaiNguoiDung}
                   className="form-control"
                   name="maLoaiNguoiDung"
                   onChange={this.handleChangeInput}
@@ -168,7 +184,20 @@ class FormDK extends Component {
             <button className="btn btn-outline-success mr-2" type="submit">
               Đăng kí
             </button>
-            <button className="btn btn-outline-primary">Cập nhật</button>
+            <button
+              type="button"
+              onClick={() => {
+                //Cập nhật dữ liệu
+                const action = {
+                  type: "CAP_NHAT_NGUOI_DUNG",
+                  nguoiDungCapNhat: this.props.nguoiDung.values,
+                };
+                this.props.dispatch(action);
+              }}
+              className="btn btn-outline-primary"
+            >
+              Cập nhật
+            </button>
           </div>
         </div>
       </form>
@@ -176,7 +205,14 @@ class FormDK extends Component {
   }
 }
 
-export default connect()(FormDK);
+const mapStateToProps = (state) => {
+  return {
+    nguoiDungChinhSua: state.BTQLReducer.nguoiDungChinhSua,
+    nguoiDung: state.BTQLReducer.nguoiDung,
+  };
+};
+
+export default connect(mapStateToProps)(FormDK);
 
 // import React, { Component } from "react";
 // import {connect} from 'react-redux';

@@ -17,6 +17,32 @@ const stateDefault = {
       loaiNguoiDung: "KhachHang",
     },
   ],
+  nguoiDungChinhSua: {
+    taiKhoan: "nguyenvana",
+    hoTen: "Nguyễn Văn A",
+    matKhau: "123456789",
+    email: "nguyenvana@gmail.com",
+    soDienThoai: "09090909",
+    loaiNguoiDung: "KhachHang",
+  },
+  nguoiDung: {
+    values: {
+      taiKhoan: "",
+      matKhau: "",
+      email: "",
+      hoTen: "",
+      soDienThoai: "",
+      maLoaiNguoiDung: "KhachHang",
+    },
+    errors: {
+      taiKhoan: "",
+      matKhau: "",
+      email: "",
+      hoTen: "",
+      soDienThoai: "",
+      maLoaiNguoiDung: "",
+    },
+  },
 };
 
 export const BTQLReducer = (state = stateDefault, action) => {
@@ -33,7 +59,36 @@ export const BTQLReducer = (state = stateDefault, action) => {
       state.mangNguoiDung = mangNguoiDungCapNhat.filter(
         (nguoiDung) => nguoiDung.taiKhoan !== action.taiKhoan
       );
-      return {...state};
+      return { ...state };
+    }
+    case "CHINH_SUA": {
+      state.nguoiDung.values = action.nguoiDungChinhSua;
+      state.nguoiDung = { ...state.nguoiDung };
+      return { ...state };
+    }
+    case "HANDLE_CHANGE_INPUT": {
+      state.nguoiDung = action.nguoiDung;
+
+      return { ...state };
+    }
+    case "CAP_NHAT_NGUOI_DUNG": {
+      const mangNguoiDungCapNhat = [...state.mangNguoiDung];
+
+      //Tìm ra người dùng cần cập nhật
+      let nguoiDungCapNhat = mangNguoiDungCapNhat.find(
+        (nguoiDung) => nguoiDung.taiKhoan === action.nguoiDungCapNhat.taiKhoan
+      );
+
+      if (nguoiDungCapNhat) {
+        nguoiDungCapNhat.hoTen = action.nguoiDungCapNhat.hoTen;
+        nguoiDungCapNhat.email = action.nguoiDungCapNhat.email;
+        nguoiDungCapNhat.soDienThoai = action.nguoiDungCapNhat.soDienThoai;
+        nguoiDungCapNhat.matKhau = action.nguoiDungCapNhat.matKhau;
+        nguoiDungCapNhat.maLoaiNguoiDung =
+          action.nguoiDungCapNhat.maLoaiNguoiDung;
+      }
+      state.mangNguoiDung = mangNguoiDungCapNhat;
+      return { ...state };
     }
 
     default:
